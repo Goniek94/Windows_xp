@@ -81,8 +81,8 @@ export default function InfoScreen({ onFinish }: InfoScreenProps) {
                 Whoops — you were supposed to explore my projects!
               </div>
               <div style={{ fontSize: '12px', color: '#555' }}>
-                Originally there was a full interactive folder system here... but honestly, let's
-                keep it simple. 😄
+                Originally there was a full interactive folder system here... but honestly,
+                let&apos;s keep it simple. 😄
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function InfoScreen({ onFinish }: InfoScreenProps) {
               marginBottom: '20px',
             }}
           >
-            🚧 &nbsp;This portfolio is still a work in progress — more content coming soon! I'm
+            🚧 &nbsp;This portfolio is still a work in progress — more content coming soon! I&apos;m
             currently open to work, so feel free to reach out. 🚀
           </div>
 
