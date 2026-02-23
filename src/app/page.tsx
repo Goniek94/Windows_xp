@@ -6,46 +6,30 @@ import WelcomeScreen from '@/components/boot/WelcomeScreen';
 import GlitchOverlay from '@/components/DesktopXP/Glitch';
 import DesktopXP from '@/components/DesktopXP/Desktop';
 import Warning from '@/components/DesktopXP/Warning';
-import Folders from '@/components/DesktopXP/Folders';
+import InfoScreen from '@/components/DesktopXP/Desktop/components/InfoScreen';
 
-type AppPhase = 'boot' | 'welcome' | 'desktop' | 'glitch' | 'warning' | 'folders';
+type AppPhase = 'boot' | 'welcome' | 'desktop' | 'glitch' | 'warning' | 'info';
 
 interface AppState {
   currentPhase: AppPhase;
-  showPortfolioIcons: boolean;
   glitchCompleted: boolean;
-  previousPhase: AppPhase | null;
-  isTransitioning: boolean;
 }
 
 export default function Home() {
   const [state, setState] = useState<AppState>({
     currentPhase: 'boot',
-    showPortfolioIcons: false,
     glitchCompleted: false,
-    previousPhase: null,
-    isTransitioning: false,
   });
 
   const [transitionAudio, setTransitionAudio] = useState<HTMLAudioElement | null>(null);
 
   /* ---------- phase handlers ---------- */
   const handleBootFinish = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      currentPhase: 'welcome',
-      isTransitioning: false,
-      previousPhase: null,
-    }));
+    setState((prev) => ({ ...prev, currentPhase: 'welcome' }));
   }, []);
 
   const handleWelcomeFinish = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      currentPhase: 'desktop',
-      isTransitioning: false,
-      previousPhase: null,
-    }));
+    setState((prev) => ({ ...prev, currentPhase: 'desktop' }));
 
     const possiblePaths = [
       '/sound/Microsoft Windows XP Startup Sound.mp3',
@@ -70,7 +54,7 @@ export default function Home() {
           audio.play().catch(() => {});
           break;
         } catch {
-          /* próbuj kolejny plik */
+          /* try next file */
         }
       }
     })();
@@ -78,41 +62,25 @@ export default function Home() {
 
   const handleGlitchTrigger = useCallback(() => {
     if (!state.glitchCompleted) {
-      setState((prev) => ({
-        ...prev,
-        currentPhase: 'glitch',
-        isTransitioning: false,
-        previousPhase: null,
-      }));
+      setState((prev) => ({ ...prev, currentPhase: 'glitch' }));
     }
   }, [state.glitchCompleted]);
 
   const handleGlitchFinish = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      currentPhase: 'warning',
-      isTransitioning: false,
-      previousPhase: null,
-    }));
+    setState((prev) => ({ ...prev, currentPhase: 'warning' }));
   }, []);
 
+  // Warning -> Info
   const handleWarningFinish = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      currentPhase: 'folders',
-      isTransitioning: false,
-      previousPhase: null,
-    }));
+    setState((prev) => ({ ...prev, currentPhase: 'info' }));
   }, []);
 
-  const handleFoldersFinish = useCallback(() => {
+  // Info -> Desktop
+  const handleInfoFinish = useCallback(() => {
     setState((prev) => ({
       ...prev,
       currentPhase: 'desktop',
-      showPortfolioIcons: true,
       glitchCompleted: true,
-      isTransitioning: false,
-      previousPhase: null,
     }));
   }, []);
 
@@ -127,65 +95,39 @@ export default function Home() {
   /* ---------- render ---------- */
   return (
     <div className="w-full h-screen overflow-hidden relative bg-black">
-      {/* BootScreen */}
       {state.currentPhase === 'boot' && (
-        <div
-          className="absolute inset-0"
-          style={{
-            zIndex: 30,
-            pointerEvents: 'auto',
-          }}
-        >
+        <div className="absolute inset-0" style={{ zIndex: 30, pointerEvents: 'auto' }}>
           <BootScreen onFinish={handleBootFinish} />
         </div>
       )}
 
-      {/* WelcomeScreen */}
       {state.currentPhase === 'welcome' && (
-        <div
-          className="absolute inset-0"
-          style={{
-            zIndex: 30,
-            pointerEvents: 'auto',
-          }}
-        >
+        <div className="absolute inset-0" style={{ zIndex: 30, pointerEvents: 'auto' }}>
           <WelcomeScreen onFinish={handleWelcomeFinish} />
         </div>
       )}
 
-      {/* Desktop */}
       {state.currentPhase === 'desktop' && (
-        <div
-          className="absolute inset-0"
-          style={{
-            zIndex: 30,
-          }}
-        >
-          <DesktopXP
-            showAdditionalIcons={state.showPortfolioIcons}
-            onGlitchTrigger={handleGlitchTrigger}
-          />
+        <div className="absolute inset-0" style={{ zIndex: 30 }}>
+          <DesktopXP showAdditionalIcons={false} onGlitchTrigger={handleGlitchTrigger} />
         </div>
       )}
 
-      {/* Glitch */}
       {state.currentPhase === 'glitch' && (
         <div className="absolute inset-0 z-40">
           <GlitchOverlay onFinish={handleGlitchFinish} />
         </div>
       )}
 
-      {/* Warning */}
       {state.currentPhase === 'warning' && (
         <div className="absolute inset-0 z-40">
           <Warning onFinish={handleWarningFinish} />
         </div>
       )}
 
-      {/* Folders */}
-      {state.currentPhase === 'folders' && (
+      {state.currentPhase === 'info' && (
         <div className="absolute inset-0 z-40">
-          <Folders onFinish={handleFoldersFinish} />
+          <InfoScreen onFinish={handleInfoFinish} />
         </div>
       )}
     </div>

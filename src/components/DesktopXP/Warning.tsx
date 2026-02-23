@@ -63,7 +63,6 @@ export default function Warning({ onFinish }: WarningProps) {
 
     loadAndPlay();
 
-    /* ---------- cleanup ---------- */
     return () => {
       mounted = false;
 
@@ -93,7 +92,6 @@ export default function Warning({ onFinish }: WarningProps) {
         touchAction: 'pan-y',
       }}
     >
-      {/* BSOD Content */}
       <div className="min-h-screen flex items-center justify-center px-4 sm:px-8 md:px-12 py-8">
         <div className="max-w-4xl w-full">
           {/* Header */}
@@ -134,7 +132,7 @@ export default function Warning({ onFinish }: WarningProps) {
             *** STOP: 0x0000007B (0xF78D2524, 0xC0000034, 0x00000000, 0x00000000)
           </div>
 
-          {/* Crazy Frog Warning Box */}
+          {/* Crazy Frog Warning Box — exact text from original */}
           <div className="bg-white text-black p-3 sm:p-4 md:p-6 mb-6 md:mb-8 border-2 border-gray-400">
             <div className="text-center">
               <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 md:mb-4 text-red-600">
@@ -184,7 +182,6 @@ export default function Warning({ onFinish }: WarningProps) {
         }}
       />
 
-      {/* Local Animations */}
       <style jsx>{`
         @keyframes bounce {
           0%,
